@@ -15,7 +15,7 @@
 #include "ShortestPath.h"
 
 #include "EdgeWeightedGraph.h"
-#include "EdgeWeightedDiGraph.h"
+#include "EdgeWeightedDigraph.h"
 
 using namespace std;
 
