@@ -12,6 +12,7 @@
 #include <queue>
 #include <vector>
 #include <set>
+#include <list>
 #include <functional>
 
 
@@ -68,9 +69,41 @@ public:
 	typedef ShortestPath<GraphType> BASE;
 	typedef typename BASE::Edge Edge;
 	typedef typename BASE::Weight Weight;
+    typedef std::pair<Edge, int> EdgeVertex;
 
 	DijkstraSP(const GraphType& g, int v)  {
-		/* A IMPLEMENTER */
+	    // init
+	    //std::set<EdgeVertex> pq;
+	    std::list<int> Q;
+	    this->distanceTo.assign(g.V(), std::numeric_limits<Weight>::max());
+	    this->edgeTo.resize(g.V());
+
+        this->distanceTo[v] = 0;
+
+        for (int i = 0; i < g.V(); ++i) {
+            Q.push_back(i);
+        }
+
+        while (!Q.empty()) {
+            int u = Q.back();
+
+            for (int s : Q) {
+                if (this->distanceTo[s] < this->distanceTo[u]) {
+                    u = s;
+                }
+            }
+
+            Q.remove(u);
+
+            g.forEachAdjacentEdge(u, [this](const Edge &e) {
+                int distThruE = this->distanceTo[e.From()] + e.Weight();
+
+                if (distThruE < this->distanceTo[e.To()]) {
+                    this->distanceTo[e.To()] = distThruE;
+                    this->edgeTo[e.To()] = e;
+                }
+            });
+        }
 	}
 };
 
@@ -106,7 +139,7 @@ public:
 	// Constructeur a partir du graphe g et du sommet v a la source
 	// des plus courts chemins
 	BellmanFordSP(const GraphType& g, int v) {
-		
+
 		this->edgeTo.resize(g.V());
 		this->distanceTo.assign(g.V(),std::numeric_limits<Weight>::max());
 
