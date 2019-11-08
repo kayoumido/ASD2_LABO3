@@ -73,27 +73,20 @@ public:
 
 	DijkstraSP(const GraphType& g, int v)  {
 	    // init
-	    //std::set<EdgeVertex> pq;
+	    std::set<EdgeVertex> pq;
 	    std::list<int> Q;
+
 	    this->distanceTo.assign(g.V(), std::numeric_limits<Weight>::max());
 	    this->edgeTo.resize(g.V());
 
         this->distanceTo[v] = 0;
+        g.forEachEdge([&](const Edge &e) {
+            pq.insert(std::make_pair(e, e.To()));
+        });
 
-        for (int i = 0; i < g.V(); ++i) {
-            Q.push_back(i);
-        }
-
-        while (!Q.empty()) {
-            int u = Q.back();
-
-            for (int s : Q) {
-                if (this->distanceTo[s] < this->distanceTo[u]) {
-                    u = s;
-                }
-            }
-
-            Q.remove(u);
+        while (!pq.empty()) {
+            int u = pq.begin()->second;
+            pq.erase(pq.begin());
 
             g.forEachAdjacentEdge(u, [this](const Edge &e) {
                 int distThruE = this->distanceTo[e.From()] + e.Weight();
