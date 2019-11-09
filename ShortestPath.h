@@ -74,7 +74,6 @@ public:
 	DijkstraSP(const GraphType& g, int v)  {
 	    // init
 	    std::set<EdgeVertex> pq;
-	    std::list<int> Q;
 
 	    this->distanceTo.assign(g.V(), std::numeric_limits<Weight>::max());
 	    this->edgeTo.resize(g.V());
@@ -88,8 +87,8 @@ public:
             int u = pq.begin()->second;
             pq.erase(pq.begin());
 
-            g.forEachAdjacentEdge(u, [this](const Edge &e) {
-                int distThruE = this->distanceTo[e.From()] + e.Weight();
+            g.forEachAdjacentEdge(u, [&](const Edge &e) {
+                Weight distThruE = this->distanceTo[e.From()]+e.Weight();
 
                 if (distThruE < this->distanceTo[e.To()]) {
                     this->distanceTo[e.To()] = distThruE;
