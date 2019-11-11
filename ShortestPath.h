@@ -65,22 +65,38 @@ protected:
 
 template<typename GraphType>
 class DijkstraSP : public ShortestPath<GraphType> {
+
+    typedef ShortestPath<GraphType> BASE;
+    typedef typename BASE::Edge Edge;
+    typedef typename BASE::Weight Weight;
+    typedef std::pair<Weight, int> WeightVertex;
+
+    void relax(const Edge& e, std::set<WeightVertex>& pq) {
+        int v = e.From(), w = e.To();
+        Weight distThruE = this->distanceTo[v]+e.Weight();
+
+        if (distThruE < this->distanceTo[w]) {
+            pq.erase(std::make_pair(this->distanceTo[w], w));
+
+            this->distanceTo[w] = distThruE;
+            this->edgeTo[w] = e;
+
+            pq.insert(std::make_pair(distThruE, w));
+        }
+    }
 public:
-	typedef ShortestPath<GraphType> BASE;
-	typedef typename BASE::Edge Edge;
-	typedef typename BASE::Weight Weight;
-    typedef std::pair<Edge, int> EdgeVertex;
 
 	DijkstraSP(const GraphType& g, int v)  {
 	    // init
-	    std::set<EdgeVertex> pq;
-
+	    std::set<WeightVertex> pq;
 	    this->distanceTo.assign(g.V(), std::numeric_limits<Weight>::max());
 	    this->edgeTo.resize(g.V());
 
+        this->edgeTo[v]     = Edge(v,v,0);
         this->distanceTo[v] = 0;
+
         g.forEachEdge([&](const Edge &e) {
-            pq.insert(std::make_pair(e, e.To()));
+            pq.insert(std::make_pair(e.Weight(), e.To()));
         });
 
         while (!pq.empty()) {
@@ -88,12 +104,7 @@ public:
             pq.erase(pq.begin());
 
             g.forEachAdjacentEdge(u, [&](const Edge &e) {
-                Weight distThruE = this->distanceTo[e.From()]+e.Weight();
-
-                if (distThruE < this->distanceTo[e.To()]) {
-                    this->distanceTo[e.To()] = distThruE;
-                    this->edgeTo[e.To()] = e;
-                }
+                this->relax(e, pq);
             });
         }
 	}
