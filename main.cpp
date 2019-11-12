@@ -39,8 +39,21 @@ void PlusCourtCheminAvecTravaux(const string& depart, const string& arrivee, con
 // Calcule et affiche le plus rapide chemin de la ville depart a la ville arrivee via la ville "via"
 // en passant par le reseau ferroviaire tn. Le critere a optimiser est le temps de parcours
 void PlusRapideChemin(const string& depart, const string& arrivee, const string& via, TrainNetwork& tn) {
-    
-    /* A IMPLEMENTER */
+    int vFrom = (tn.cityIdx.find(depart))->second;
+    int vVia = (tn.cityIdx.find(via))->second;
+    int vTo = (tn.cityIdx.find(arrivee))->second;
+
+    TrainDIGraphWrapperDuration tdgw(tn);
+
+    // From -> Via
+    DijkstraSP<TrainDIGraphWrapperDuration> dikstra(tdgw, vFrom);
+    vector<WeightedDirectedEdge<double>> shortestPathFromVia = dikstra.PathTo(vVia);
+
+    // Via -> To
+    dikstra = DijkstraSP<TrainDIGraphWrapperDuration>(tdgw, vVia);
+    vector<WeightedDirectedEdge<double>> shortestPathViaTo = dikstra.PathTo(vTo);
+
+
 }
 
 
@@ -95,12 +108,12 @@ int testWeightFunction(){
 
 
 int main(int argc, const char * argv[]) {
-
+    /*
     testShortestPath("tinyEWD.txt");
     testShortestPath("mediumEWD.txt");
     testShortestPath("1000EWD.txt");
     testShortestPath("10000EWD.txt");
-
+    */
 
     TrainNetwork tn("reseau.txt");
 

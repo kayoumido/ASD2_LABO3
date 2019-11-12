@@ -18,5 +18,4 @@ add_executable(Labo03
         UnionFind.h
         Util.cpp
         Util.h
-        TrainDIGraphWrapperDuration.h
-        TrainDIGraphWrapperDuration.cpp)
+        TrainDIGraphWrapperDuration.h)
