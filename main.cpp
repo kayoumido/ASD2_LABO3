@@ -23,8 +23,33 @@ using namespace std;
 // Calcule et affiche le plus court chemin de la ville depart a la ville arrivee
 // en passant par le reseau ferroviaire tn. Le critere a optimiser est la distance.
 void PlusCourtChemin(const string& depart, const string& arrivee, TrainNetwork& tn) {
-    
-    /* A IMPLEMENTER */
+    // fetch vertex index of each town (from, to)
+    int vFrom = (tn.cityIdx.find(depart))->second;
+    int vTo = (tn.cityIdx.find(arrivee))->second;
+
+    // Use our DIGraphWrapper for Duration calcul
+    TrainDIGraphWrapperDuration tdgw(tn);
+
+    // Dijkstra From -> To
+    DijkstraSP<TrainDIGraphWrapperDuration> dikstra(tdgw, vFrom);
+    vector<WeightedDirectedEdge<double>> shortestPath = dikstra.PathTo(vTo);
+
+    cout << "longueur = " << dikstra.DistanceTo(vTo) << " km" << endl;
+    cout << "via ";
+
+    // Display Via -> To
+    for(size_t  i = 0; i < shortestPath.size(); ++i){
+        // Display only the From town
+        WeightedDirectedEdge<double> edge = shortestPath[i];
+        cout << tn.cities[edge.From()].name << " -> ";
+        // Display the last town (To) at the end
+        if(i == shortestPath.size() - 1) {
+            cout << tn.cities[edge.To()].name;
+        }
+    }
+
+    cout << endl;
+
 }
 
 // Calcule et affiche le plus court chemin de la ville depart a la ville arrivee
@@ -146,22 +171,13 @@ int main(int argc, const char * argv[]) {
     // TESTETESTETEST
     TrainNetwork tn("reseau.txt");
 
-    cout << "1. Chemin le plus rapide entre Lausanne et Berne en passant par Viege" << endl;
-    PlusRapideChemin("Lausanne", "Berne", "Viege", tn);
+    cout << "1. Chemin le plus court entre Geneve et Coire" << endl;
+    PlusCourtChemin("Geneve", "Coire", tn);
 
     cout << endl;
 
-    cout << "3. Chemin le plus rapide entre Geneve et Coire en passant par Brigue" << endl;
-    PlusRapideChemin("Geneve", "Coire", "Brigue", tn);
-
-    cout << endl;
-
-    cout << "4. Chemin le plus rapide entre Lausanne et Zurich en passant par Bale" << endl;
-    PlusRapideChemin("Lausanne", "Zurich", "Bale", tn);
-
-    cout << endl;
-
-
+    cout << "1. Chemin le plus court entre Lausanne et Berne" << endl;
+    PlusCourtChemin("Lausanne", "Berne", tn);
 
     /*
     cout << "1. Chemin le plus court entre Geneve et Coire" << endl;
