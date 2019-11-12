@@ -18,6 +18,7 @@
 #include "EdgeWeightedDigraph.h"
 #include "TrainDIGraphWrapperDuration.h"
 #include "TrainDIGraphWrapperDistance.h"
+#include "TrainGraphWrapperMSTPrice.h"
 
 using namespace std;
 
@@ -133,7 +134,6 @@ void PlusRapideChemin(const string& depart, const string& arrivee, const string&
 
 }
 
-
 // Calcule et affiche le plus reseau a renover couvrant toutes les villes le moins cher.
 // Le prix pour renover 1 km de chemin de fer est de :
 // - 15 CHF par km pour les lignes ayant 4 voies
@@ -141,8 +141,22 @@ void PlusRapideChemin(const string& depart, const string& arrivee, const string&
 // - 6 CHF par km pour les lignes ayant 2 voies
 // - 3 CHF par km pour les lignes ayant 1 voie
 void ReseauLeMoinsCher(TrainNetwork &tn) {
-    
-    /* A IMPLEMENTER */
+    TrainGraphWrapperMSTPrice tgwmst(tn);
+    vector<WeightedEdge<double>> mst = MinimumSpanningTree<TrainGraphWrapperMSTPrice>::Kruskal(tgwmst);
+
+    double totalPrice = 0;
+
+    // Display every line
+    for(WeightedEdge<double> p : mst) {
+
+        /* DISPLAY ORDER ? */
+
+        cout << tn.cities[p.Either()].name << " - " << tn.cities[p.Other(p.Either())].name << " : " << p.Weight() << " MF" << endl;
+        totalPrice += p.Weight();
+    }
+
+    // Display total cost
+    cout << endl << "Cout total: " << totalPrice << " MF" << endl; // Should give 7959
 }
 
 // compare les algorithmes Dijkstra et BellmanFord pour calculer les plus courts chemins au

@@ -19,4 +19,5 @@ add_executable(Labo03
         Util.cpp
         Util.h
         TrainDIGraphWrapperDuration.h
-        TrainDIGraphWrapperDistance.h)
+        TrainDIGraphWrapperDistance.h
+        TrainGraphWrapperMSTPrice.h)
