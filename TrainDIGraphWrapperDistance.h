@@ -14,14 +14,13 @@ class TrainDIGraphWrapperDistance {
 
 private:
     const TrainNetwork& tn;
+    int vUnderRenovation;
 
 public :
 
     typedef WeightedDirectedEdge<double> Edge;
 
-    TrainDIGraphWrapperDistance(const TrainNetwork& tn) : tn(tn) {
-
-    }
+    TrainDIGraphWrapperDistance(const TrainNetwork& tn, int vUnderConstruction = -1) : tn(tn), vUnderRenovation(vUnderConstruction) {}
 
     int V() const {
         return (int)tn.cities.size();
@@ -59,7 +58,16 @@ public :
 
 private :
     double calculWeightDistance(const Line& line) const {
+        // We have a town in renovation
+        if(vUnderRenovation != -1) {
+            // Add infinite to the cost of the from or to edge for which we have the town in renovation
+            if(line.cities.first == vUnderRenovation || line.cities.second == vUnderRenovation){
+                return std::numeric_limits<int>::max();
+            }
+        }
+
         return line.length;
+
     }
 
 

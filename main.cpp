@@ -17,6 +17,7 @@
 #include "EdgeWeightedGraph.h"
 #include "EdgeWeightedDigraph.h"
 #include "TrainDIGraphWrapperDuration.h"
+#include "TrainDIGraphWrapperDistance.h"
 
 using namespace std;
 
@@ -27,11 +28,11 @@ void PlusCourtChemin(const string& depart, const string& arrivee, TrainNetwork& 
     int vFrom = (tn.cityIdx.find(depart))->second;
     int vTo = (tn.cityIdx.find(arrivee))->second;
 
-    // Use our DIGraphWrapper for Duration calcul
-    TrainDIGraphWrapperDuration tdgw(tn);
+    // Use our DIGraphWrapper for Distance calcul
+    TrainDIGraphWrapperDistance tdgw(tn);
 
     // Dijkstra From -> To
-    DijkstraSP<TrainDIGraphWrapperDuration> dikstra(tdgw, vFrom);
+    DijkstraSP<TrainDIGraphWrapperDistance> dikstra(tdgw, vFrom);
     vector<WeightedDirectedEdge<double>> shortestPath = dikstra.PathTo(vTo);
 
     cout << "longueur = " << dikstra.DistanceTo(vTo) << " km" << endl;
@@ -57,8 +58,33 @@ void PlusCourtChemin(const string& depart, const string& arrivee, TrainNetwork& 
 // inaccessible. Vous pouvez mettre un cout infini aux arcs ayant comme depart ou
 // comme arrivee cette ville en travaux. Le critere a optimiser est la distance.
 void PlusCourtCheminAvecTravaux(const string& depart, const string& arrivee, const string& gareEnTravaux, TrainNetwork& tn) {
-    
-    /* A IMPLEMENTER */
+    // fetch vertex index of each town (from, to)
+    int vFrom = (tn.cityIdx.find(depart))->second;
+    int vTo = (tn.cityIdx.find(arrivee))->second;
+    int vUnderRenovation = (tn.cityIdx.find(gareEnTravaux))->second;
+
+    // Use our DIGraphWrapper for Distance calcul with in parameter the vertex in Renovation
+    TrainDIGraphWrapperDistance tdgw(tn, vUnderRenovation);
+
+    // Dijkstra From -> To
+    DijkstraSP<TrainDIGraphWrapperDistance> dikstra(tdgw, vFrom);
+    vector<WeightedDirectedEdge<double>> shortestPath = dikstra.PathTo(vTo);
+
+    cout << "longueur = " << dikstra.DistanceTo(vTo) << " km" << endl;
+    cout << "via ";
+
+    // Display Via -> To
+    for(size_t  i = 0; i < shortestPath.size(); ++i){
+        // Display only the From town
+        WeightedDirectedEdge<double> edge = shortestPath[i];
+        cout << tn.cities[edge.From()].name << " -> ";
+        // Display the last town (To) at the end
+        if(i == shortestPath.size() - 1) {
+            cout << tn.cities[edge.To()].name;
+        }
+    }
+
+    cout << endl;
 }
 
 // Calcule et affiche le plus rapide chemin de la ville depart a la ville arrivee via la ville "via"
@@ -171,36 +197,31 @@ int main(int argc, const char * argv[]) {
     // TESTETESTETEST
     TrainNetwork tn("reseau.txt");
 
+
     cout << "1. Chemin le plus court entre Geneve et Coire" << endl;
     PlusCourtChemin("Geneve", "Coire", tn);
 
     cout << endl;
-
-    cout << "1. Chemin le plus court entre Lausanne et Berne" << endl;
-    PlusCourtChemin("Lausanne", "Berne", tn);
-
-    /*
-    cout << "1. Chemin le plus court entre Geneve et Coire" << endl;
-    
-    PlusCourtChemin("Geneve", "Coire", tn);
     
     cout << "2. Chemin le plus court entre Geneve et Coire, avec la gare de Sion en travaux" << endl;
-    
     PlusCourtCheminAvecTravaux("Geneve", "Coire", "Sion", tn);
-    
-    cout << "3. Chemin le plus rapide entre Geneve et Coire en passant par Brigue" << endl;
 
+    cout << endl;
+
+    cout << "3. Chemin le plus rapide entre Geneve et Coire en passant par Brigue" << endl;
     PlusRapideChemin("Geneve", "Coire", "Brigue", tn);
-    
+
+    cout << endl;
+
     cout << "4. Chemin le plus rapide entre Lausanne et Zurich en passant par Bale" << endl;
-    
     PlusRapideChemin("Lausanne", "Zurich", "Bale", tn);
-    
+
+    cout << endl;
+
     cout << "5. Quelles lignes doivent etre renovees ? Quel sera le cout de la renovation de ces lignes ?" << endl;
-    
     ReseauLeMoinsCher(tn);
 
-     */
+
     
     return 0;
 }
