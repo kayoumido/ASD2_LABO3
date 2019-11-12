@@ -39,20 +39,46 @@ void PlusCourtCheminAvecTravaux(const string& depart, const string& arrivee, con
 // Calcule et affiche le plus rapide chemin de la ville depart a la ville arrivee via la ville "via"
 // en passant par le reseau ferroviaire tn. Le critere a optimiser est le temps de parcours
 void PlusRapideChemin(const string& depart, const string& arrivee, const string& via, TrainNetwork& tn) {
+    // fetch vertex index of each town (from, via, to)
     int vFrom = (tn.cityIdx.find(depart))->second;
     int vVia = (tn.cityIdx.find(via))->second;
     int vTo = (tn.cityIdx.find(arrivee))->second;
 
+    // Use our DIGraphWrapper for Duration calcul
     TrainDIGraphWrapperDuration tdgw(tn);
 
-    // From -> Via
+    // Dijkstra From -> Via
     DijkstraSP<TrainDIGraphWrapperDuration> dikstra(tdgw, vFrom);
     vector<WeightedDirectedEdge<double>> shortestPathFromVia = dikstra.PathTo(vVia);
+    double durationFromVia = dikstra.DistanceTo(vVia);
 
-    // Via -> To
+    // Dijkstra Via -> To
     dikstra = DijkstraSP<TrainDIGraphWrapperDuration>(tdgw, vVia);
     vector<WeightedDirectedEdge<double>> shortestPathViaTo = dikstra.PathTo(vTo);
+    double durationViaTo = dikstra.DistanceTo(vTo);
 
+    cout << "Temps = " << durationFromVia + durationViaTo << " minutes" << endl;
+
+    cout << "Via ";
+
+    // Display From -> Via
+    for(size_t  i = 0; i < shortestPathFromVia.size(); ++i){
+        // Display only the From town
+        WeightedDirectedEdge<double> edge = shortestPathFromVia[i];
+        cout << tn.cities[edge.From()].name << " -> ";
+    }
+    // Display Via -> To
+    for(size_t  i = 0; i < shortestPathViaTo.size(); ++i){
+        // Display only the From town
+        WeightedDirectedEdge<double> edge = shortestPathViaTo[i];
+        cout << tn.cities[edge.From()].name << " -> ";
+        // Display the last town (To) at the end
+        if(i == shortestPathViaTo.size() - 1) {
+            cout << tn.cities[edge.To()].name;
+        }
+    }
+
+    cout << endl;
 
 }
 
@@ -115,9 +141,29 @@ int main(int argc, const char * argv[]) {
     testShortestPath("10000EWD.txt");
     */
 
+
+
+    // TESTETESTETEST
     TrainNetwork tn("reseau.txt");
 
-    
+    cout << "1. Chemin le plus rapide entre Lausanne et Berne en passant par Viege" << endl;
+    PlusRapideChemin("Lausanne", "Berne", "Viege", tn);
+
+    cout << endl;
+
+    cout << "3. Chemin le plus rapide entre Geneve et Coire en passant par Brigue" << endl;
+    PlusRapideChemin("Geneve", "Coire", "Brigue", tn);
+
+    cout << endl;
+
+    cout << "4. Chemin le plus rapide entre Lausanne et Zurich en passant par Bale" << endl;
+    PlusRapideChemin("Lausanne", "Zurich", "Bale", tn);
+
+    cout << endl;
+
+
+
+    /*
     cout << "1. Chemin le plus court entre Geneve et Coire" << endl;
     
     PlusCourtChemin("Geneve", "Coire", tn);
@@ -127,7 +173,7 @@ int main(int argc, const char * argv[]) {
     PlusCourtCheminAvecTravaux("Geneve", "Coire", "Sion", tn);
     
     cout << "3. Chemin le plus rapide entre Geneve et Coire en passant par Brigue" << endl;
-    
+
     PlusRapideChemin("Geneve", "Coire", "Brigue", tn);
     
     cout << "4. Chemin le plus rapide entre Lausanne et Zurich en passant par Bale" << endl;
@@ -137,6 +183,8 @@ int main(int argc, const char * argv[]) {
     cout << "5. Quelles lignes doivent etre renovees ? Quel sera le cout de la renovation de ces lignes ?" << endl;
     
     ReseauLeMoinsCher(tn);
+
+     */
     
     return 0;
 }
