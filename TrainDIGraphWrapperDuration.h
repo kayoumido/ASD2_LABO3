@@ -6,6 +6,7 @@
 #define LABO03_TRAINDIGRAPHWRAPPERDURATION_H
 
 #include "TrainNetwork.h"
+#include "EdgeWeightedDigraph.h"
 
 class TrainDIGraphWrapperDuration {
 
@@ -15,6 +16,10 @@ private:
     const TrainNetwork& tn;
 
 public :
+
+    typedef EdgeWeightedDiGraph<int>::Edge Edge;
+    typedef EdgeWeightedDiGraph<int>::WeightType WeightType;
+
     TrainDIGraphWrapperDuration(const TrainNetwork& tn);
 
     int V() const ;
