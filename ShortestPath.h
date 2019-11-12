@@ -53,7 +53,19 @@ public:
 	// Renvoie la liste ordonnee des arcs constituant un chemin le plus court du
 	// sommet source à v.
 	Edges PathTo(int v) {
-		/* A IMPLEMENTER */
+	    Edges pathTo;
+
+	    Edge current = this->edgeTo.at(v);
+
+	    while (current.To() != current.From()) {
+            pathTo.push_back(current);
+
+            current = this->edgeTo.at(current.From());
+	    }
+
+	    std::reverse(pathTo.begin(), pathTo.end());
+
+        return pathTo;
 	}
 
 protected:
