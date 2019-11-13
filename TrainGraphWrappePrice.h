@@ -2,13 +2,13 @@
 // Created by rdema on 12.11.2019.
 //
 
-#ifndef LABO03_TRAINGRAPHWRAPPERMSTPRICE_H
-#define LABO03_TRAINGRAPHWRAPPERMSTPRICE_H
+#ifndef LABO03_TRAINGRAPHWRAPPEPRICE_H
+#define LABO03_TRAINGRAPHWRAPPEPRICE_H
 
 #include "TrainNetwork.h"
 #include "EdgeWeightedGraph.h"
 
-class TrainGraphWrapperMSTPrice {
+class TrainGraphWrappePrice {
 
     typedef TrainNetwork::Line Line;
 
@@ -19,7 +19,7 @@ public :
 
     typedef WeightedEdge<double> Edge;
 
-    TrainGraphWrapperMSTPrice(const TrainNetwork& tn) : tn(tn) {
+    TrainGraphWrappePrice(const TrainNetwork& tn) : tn(tn) {
 
     }
 
@@ -67,4 +67,4 @@ private :
     }
 };
 
-#endif //LABO03_TRAINGRAPHWRAPPERMSTPRICE_H
+#endif //LABO03_TRAINGRAPHWRAPPEPRICE_H

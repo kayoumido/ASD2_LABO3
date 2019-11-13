@@ -18,7 +18,7 @@
 #include "EdgeWeightedDigraph.h"
 #include "TrainDIGraphWrapperDuration.h"
 #include "TrainDIGraphWrapperDistance.h"
-#include "TrainGraphWrapperMSTPrice.h"
+#include "TrainGraphWrappePrice.h"
 
 using namespace std;
 
@@ -141,8 +141,8 @@ void PlusRapideChemin(const string& depart, const string& arrivee, const string&
 // - 6 CHF par km pour les lignes ayant 2 voies
 // - 3 CHF par km pour les lignes ayant 1 voie
 void ReseauLeMoinsCher(TrainNetwork &tn) {
-    TrainGraphWrapperMSTPrice tgwmst(tn);
-    vector<WeightedEdge<double>> mst = MinimumSpanningTree<TrainGraphWrapperMSTPrice>::Kruskal(tgwmst);
+    TrainGraphWrappePrice tgwmst(tn);
+    vector<WeightedEdge<double>> mst = MinimumSpanningTree<TrainGraphWrappePrice>::Kruskal(tgwmst);
 
     double totalPrice = 0;
 
