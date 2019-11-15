@@ -85,28 +85,36 @@ class DijkstraSP : public ShortestPath<GraphType> {
 
     void relax(const Edge& e, std::set<WeightVertex>& pq) {
         int v = e.From(), w = e.To();
+        // calculate the new weight to reach `w`
         Weight distThruE = this->distanceTo[v]+e.Weight();
 
+        // if the weight trough `e` is lower than the current one
+        // to reach `w`
         if (distThruE < this->distanceTo[w]) {
+            // then we can change the new shortest path to `w`
+            // by removing the current pair from the PQ
             pq.erase(std::make_pair(this->distanceTo[w], w));
 
+            // change the distance and the edge connecting `w` to the root vertex
             this->distanceTo[w] = distThruE;
             this->edgeTo[w] = e;
-
+            // and create a new pair
             pq.insert(std::make_pair(distThruE, w));
         }
     }
 public:
 
-	DijkstraSP(const GraphType& g, int v)  {
+	DijkstraSP(const GraphType& g, int v) {
 	    // init
 	    std::set<WeightVertex> pq;
 	    this->distanceTo.assign(g.V(), std::numeric_limits<Weight>::max());
 	    this->edgeTo.resize(g.V());
 
+	    // set the default values for the root vertex
         this->edgeTo[v]     = Edge(v,v,0);
         this->distanceTo[v] = 0;
 
+        // fill the pq
         g.forEachEdge([&](const Edge &e) {
             pq.insert(std::make_pair(e.Weight(), e.To()));
         });
