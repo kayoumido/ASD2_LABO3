@@ -25,34 +25,36 @@ using namespace std;
 // Calcule et affiche le plus court chemin de la ville depart a la ville arrivee
 // en passant par le reseau ferroviaire tn. Le critere a optimiser est la distance.
 void PlusCourtChemin(const string& depart, const string& arrivee, TrainNetwork& tn) {
-    // fetch vertex index of each town (from, to)
-    int vFrom = (tn.cityIdx.find(depart))->second;
-    int vTo = (tn.cityIdx.find(arrivee))->second;
+    // Get the vertices for the `depart` and `arrivee`
+    int vFrom   = (tn.cityIdx.find(depart))->second;
+    int vTo     = (tn.cityIdx.find(arrivee))->second;
 
-    // Use our DIGraphWrapper for Distance calcul
+    // Use our DIGraphWrapper to calculate the shortest distance
     TrainDIGraphWrapperDistance tdgw(tn);
 
-    // Dijkstra From -> To
+    // Use Dijkstra to get the shortest path from `depart` to `arrivee`
     DijkstraSP<TrainDIGraphWrapperDistance> dikstra(tdgw, vFrom);
     vector<WeightedDirectedEdge<double>> shortestPath = dikstra.PathTo(vTo);
 
     cout << "longueur = " << dikstra.DistanceTo(vTo) << " km" << endl;
     cout << "via ";
 
-    // Display Via -> To
-    for(size_t  i = 0; i < shortestPath.size(); ++i){
-        // Display only the From town
+    // Display the shortest path from `depart` to `arrivee`
+    // Display the origin
+    // i.e. `depart`
+    cout << depart << " -> ";
+
+    // Display the path from the origin to the destination
+    for(size_t  i = 1; i < shortestPath.size(); ++i){
         WeightedDirectedEdge<double> edge = shortestPath[i];
+
         cout << tn.cities[edge.From()].name << " -> ";
-        // Display the last town (To) at the end
-        if(i == shortestPath.size() - 1) {
-            cout << tn.cities[edge.To()].name;
-        }
     }
 
-    cout << endl;
-
-}
+    // Display the destination
+    // i.e. `arrivee`
+    cout << arrivee << endl;
+    }
 
 // Calcule et affiche le plus court chemin de la ville depart a la ville arrivee
 // en passant par le reseau ferroviaire tn ayant une ville en travaux et donc
@@ -211,12 +213,11 @@ int main(int argc, const char * argv[]) {
     // TESTETESTETEST
     TrainNetwork tn("reseau.txt");
 
-
     cout << "1. Chemin le plus court entre Geneve et Coire" << endl;
     PlusCourtChemin("Geneve", "Coire", tn);
 
     cout << endl;
-    
+
     cout << "2. Chemin le plus court entre Geneve et Coire, avec la gare de Sion en travaux" << endl;
     PlusCourtCheminAvecTravaux("Geneve", "Coire", "Sion", tn);
 
@@ -235,8 +236,6 @@ int main(int argc, const char * argv[]) {
     cout << "5. Quelles lignes doivent etre renovees ? Quel sera le cout de la renovation de ces lignes ?" << endl;
     ReseauLeMoinsCher(tn);
 
-
-    
     return 0;
 }
 
