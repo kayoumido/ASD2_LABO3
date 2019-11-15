@@ -1,6 +1,9 @@
-//
-// Created by rdema on 12.11.2019.
-//
+/*
+ * File:   TrainGraphWrapperPrice
+ * Author: Loïc Dessaules, Doran Kayoumi, Robin Demarta
+ *
+ * Created on 15. November 2019, 14:58
+ */
 
 #ifndef LABO03_TRAINGRAPHWRAPPEPRICE_H
 #define LABO03_TRAINGRAPHWRAPPEPRICE_H

@@ -1,6 +1,9 @@
-//
-// Created by loic on 11/8/19.
-//
+/*
+ * File:   TrainDIGraphWrapperDistance
+ * Author: Loïc Dessaules, Doran Kayoumi, Robin Demarta
+ *
+ * Created on 15. November 2019, 14:58
+ */
 
 #ifndef LABO03_TRAINDIGRAPHWRAPPERDISTANCE_H
 #define LABO03_TRAINDIGRAPHWRAPPERDISTANCE_H
