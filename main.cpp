@@ -201,16 +201,7 @@ int testWeightFunction(){
 
 
 int main(int argc, const char * argv[]) {
-    /*
-    testShortestPath("tinyEWD.txt");
-    testShortestPath("mediumEWD.txt");
-    testShortestPath("1000EWD.txt");
-    testShortestPath("10000EWD.txt");
-    */
 
-
-
-    // TESTETESTETEST
     TrainNetwork tn("reseau.txt");
 
     cout << "1. Chemin le plus court entre Geneve et Coire" << endl;
