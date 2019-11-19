@@ -150,9 +150,6 @@ void ReseauLeMoinsCher(TrainNetwork &tn) {
 
     // Display every line
     for(WeightedEdge<double> p : mst) {
-
-        /* DISPLAY ORDER ? */
-
         cout << tn.cities[p.Either()].name << " - " << tn.cities[p.Other(p.Either())].name << " : " << p.Weight() << " MF" << endl;
         totalPrice += p.Weight();
     }
@@ -195,12 +192,12 @@ void testShortestPath(string filename)
 }
 
 
-int testWeightFunction(){
-    return 2;
-}
-
-
 int main(int argc, const char * argv[]) {
+
+    testShortestPath("tinyEWD.txt");
+    testShortestPath("mediumEWD.txt");
+    testShortestPath("1000EWD.txt");
+    //testShortestPath("10000EWD.txt");
 
     TrainNetwork tn("reseau.txt");
 
